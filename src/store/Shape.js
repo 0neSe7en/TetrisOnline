@@ -15,6 +15,7 @@ const Shape = types.model({
     currentPosition: Point,
     shape: types.frozen(),
     color: types.string,
+    name: types.string,
     angle: 0
 }).actions((self) => ({
     move(point) {
@@ -23,25 +24,25 @@ const Shape = types.model({
         self.currentPosition.update(x, y);
     },
     rotate() {
-        self.angle += 90;
-        if (self.angle > 360) {
-            self.angle = self.angle - 360;
+        self.angle += 1;
+        if (self.angle === 4) {
+            self.angle = self.angle - 4;
         }
     }
 })).views((self) => ({
-    get realShape() {
-        const count = self.angle / 90;
+    realShape(angle) {
         let r = self.shape;
-        for (let i = 0; i < count; i++) {
+        let rotateCount = angle === undefined ? self.angle : angle;
+        for (let i = 0; i < rotateCount; i++) {
             r = rotate(r);
         }
         return r;
     },
     gridPositions(direction = {x: 0, y: 0}) {
         const res = [];
-        // console.log('Get grid positions',)
-        for (let y = 0; y < self.realShape.length; y++) {
-            const row = self.realShape[y];
+        const shape = self.realShape(direction.angle);
+        for (let y = 0; y < shape.length; y++) {
+            const row = shape[y];
             for (let x = 0; x < row.length; x++) {
                 if (row[x]) {
                     res.push({

@@ -116,7 +116,7 @@ Mousetrap.bind('right', () => {
 })
 
 Mousetrap.bind('up', () => {
-    store.activeShape.rotate();
+    const success = store.tryRotate();
 });
 
 autorun(redraw);
