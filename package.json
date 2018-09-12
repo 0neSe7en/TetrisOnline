@@ -5,7 +5,8 @@
   "author": "0neSe7en <siyuan.se7en@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "parcel start index.html"
+    "dev": "parcel start index.html",
+    "build": "parcel build index.html"
   },
   "devDependencies": {
     "parcel-bundler": "^1.9.7"
