@@ -1,13 +1,14 @@
-import * as _ from 'lodash';
 import { types } from "mobx-state-tree";
 import consts from "../consts";
+
+const _ = require('lodash');
 
 const Row = types.model({
     data: types.array(types.maybeNull(types.string)),
 }).actions((self) => ({
     fill(column, color) {
         self.data[column] = color;
-    }
+    },
 })).views((self) => ({
     get isFilled() {
         return self.data.every(i => i !== null);
@@ -19,23 +20,25 @@ const Matrix = types.model({
     data: types.array(Row),
 }).actions((self) => ({
     init() {
-        const res = [];
-        for (let y = 0; y < consts.HEIGHT; y++) {
-            const row = [];
-            for (let x = 0; x < consts.WIDTH; x++) {
-                row.push(null);
-            }
-            res.push({data: row});
-        }
-        self.data = res;
+        self.data = _.times(consts.HEIGHT, () => ({
+            data: _.times(consts.WIDTH, () => null)
+        }))
     },
     insertShape(targetShape) {
         const color = targetShape.color;
         const positions = targetShape.gridPositions();
-        console.log('insert shape:', positions);
         _.forEach(positions, pos => {
             self.data[pos.y].fill(pos.x, color);
         })
+    },
+    tryClear() {
+        const data = self.data.slice();
+        const removed = _.remove(data, row => row.isFilled);
+        _.times(removed.length, () => {
+            data.unshift({data: _.times(consts.WIDTH, () => null)});
+        })
+        self.data = data;
+        return removed
     }
 })).views((self) => ({
     isOutbound(position) {
@@ -43,12 +46,12 @@ const Matrix = types.model({
         return _.some(positions, pos => (
             pos.y >= consts.HEIGHT
          || pos.x >= consts.WIDTH
-         || pos.y < 0 || pos.x < 0
+         || pos.x < 0
         ))
     },
     isCollision(position) {
         const positions = _.isArray(position) ? position : [position];
-        return self.isOutbound(positions) || _.some(positions, pos => self.data[pos.y].data[pos.x]);
+        return self.isOutbound(positions) || _.some(positions, pos => self.data[pos.y] !== undefined && self.data[pos.y].data[pos.x]);
     },
     get filledPositions() {
         const res = [];

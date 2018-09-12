@@ -1,50 +1,51 @@
 import { autorun } from 'mobx';
-import * as _ from 'lodash';
 import store from './store';
-import canvas from './canvas';
+import canvasUtils, {drawGrids} from './Scene'
 import consts from './consts';
+import './ActionButton';
+import './Score';
 
+const _ = require('lodash');
 const Mousetrap = require('mousetrap');
 
-
-const controller = document.getElementById('control');
-controller.addEventListener('click', () => {
-    if (store.game.state === 'playing') {
-        store.game.stop();
-    } else {
-        store.game.start();
-    }
-});
-
-autorun(() => {
-    if (store.game.state === 'playing') {
-        controller.innerText = 'Stop';
-    } else {
-        controller.innerText = 'Start';
-    }
-});
-
-// ctx.fillStyle = consts.BACKGROUND_COLOR;
-// ctx.fillRect(0, 0, canvas.dom.width, canvas.dom.height);
-
 class Game {
-    constructor(render) {
+    constructor() {
         this.animationFrameFlag = null;
-        this.render = render;
         this.state = 'stop';
         this.lastTime = 0;
         this.currentShape = _.sample(consts.FIGURES);
         this.nextShape = _.sample(consts.FIGURES);
+        drawPreview(this.nextShape);
         store.matrix.init();
-        store.setActiveShape({x: 4, y: 0}, this.currentShape);
+        store.setActiveShape({x: 4, y: -2}, this.currentShape);
         this.update = this._update.bind(this);
-        this.disposer = autorun(() => {
+        autorun(() => {
             console.log('Game State Changed:', store.game.state);
             this.state = store.game.state;
             if (this.state === 'playing') {
                 this.update();
             }
         })
+
+        Mousetrap.bind('left', () => {
+            store.move({x: -1, y: 0});
+        })
+
+        Mousetrap.bind('right', () => {
+            store.move({x: 1, y: 0});
+        })
+
+        Mousetrap.bind('up', () => {
+            store.tryRotate();
+        });
+
+        Mousetrap.bind('down', () => {
+            store.game.updateInterval(50);
+        }, 'keydown');
+
+        Mousetrap.bind('down', () => {
+            store.game.resetInterval();
+        }, 'keyup')
     }
 
     _update() {
@@ -53,12 +54,14 @@ class Game {
             return;
         }
         if (!this.lastTime || Date.now() - this.lastTime > store.game.interval) {
-            console.log('need update');
             const success = store.move({x: 0, y: 1});
             if (!success) {
                 store.matrix.insertShape(store.activeShape);
+                const lines = store.matrix.tryClear();
+                store.game.addScore(lines.length);
                 this.currentShape = this.nextShape;
                 this.nextShape = _.sample(consts.FIGURES);
+                drawPreview(this.nextShape);
                 store.setActiveShape({x: 4, y: 0}, this.currentShape);
             }
             this.lastTime = Date.now();
@@ -67,56 +70,28 @@ class Game {
     }
 }
 
-class Grid {
-    constructor(ctx, position) {
-        this.position = position;
-        this.ctx = ctx;
-    }
-    fill(color) {
-        this._rect();
-        this.ctx.fillStyle = color;
-        this.ctx.fill();
-    }
-    stroke(color=consts.GRID_BORDER_COLOR) {
-        this._rect();
-        this.ctx.lineWidth = 0.2 ;
-        this.ctx.strokeStyle = color;
-        this.ctx.stroke();
-    }
-    _rect() {
-        const {x, y} = this.position;
-        this.ctx.beginPath();
-        this.ctx.rect(x * consts.GRID_WIDTH, y * consts.GRID_WIDTH, consts.GRID_WIDTH, consts.GRID_WIDTH);
-    }
+function redraw() {
+    const activePositions = _.map(store.activeShape.gridPositions(), pos => ({
+        x: pos.x,
+        y: pos.y,
+        color: store.activeShape.color
+    }));
+    drawGrids(canvasUtils.context, [...activePositions, ...store.matrix.filledPositions]);
 }
 
-function redraw() {
-    canvas.clear();
-    const activePositions = store.activeShape.gridPositions();
-    _.forEach(store.matrix.filledPositions, pos => {
-        const grid = new Grid(canvas.context, pos);
-        grid.fill(pos.color);
-        grid.stroke('white');
-    });
-    _.forEach(activePositions, pos => {
-        const grid = new Grid(canvas.context, pos);
-        grid.fill(store.activeShape.color);
-        grid.stroke('white');
-    });
+function drawPreview(shape) {
+    const positions = [];
+    _.forEach(shape.shape, (row, y) => {
+        _.forEach(row, (v, x) => {
+            if (v) {
+                positions.push({x, y, color: shape.color})
+            }
+        })
+    })
+    drawGrids(canvasUtils.preview, positions);
 }
 
 const game = new Game();
 
-Mousetrap.bind('left', () => {
-    store.move({x: -1, y: 0});
-})
-
-Mousetrap.bind('right', () => {
-    store.move({x: 1, y: 0});
-})
-
-Mousetrap.bind('up', () => {
-    const success = store.tryRotate();
-});
 
 autorun(redraw);

@@ -68,8 +68,6 @@ const store = Store.create({
     },
 });
 
-// store.matrix.init();
-
 window.store = store;
 
 export default store;

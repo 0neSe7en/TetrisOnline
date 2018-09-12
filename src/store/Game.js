@@ -1,11 +1,17 @@
 import { types } from 'mobx-state-tree';
 
+const scoreLogic = require('../logic/score');
+
 const Game = types.model({
     state: types.enumeration('GAME_STATE', ['stop', 'playing', 'pause']),
     mode: types.enumeration('GAME_MODE', ['single']),
     score: 0,
+    baseInterval: 500,
     interval: 500
 }).actions((self) => ({
+    resetInterval() {
+        self.interval = self.baseInterval;
+    },
     updateInterval(target) {
         self.interval = target;
     },
@@ -22,8 +28,8 @@ const Game = types.model({
     resume() {
         self.state = 'playing';
     },
-    addScore(incr) {
-        self.sscore += incr;
+    addScore(lines) {
+        self.score += scoreLogic.basic(lines);
     }
 }));
 
