@@ -8,16 +8,17 @@ import './Score';
 const _ = require('lodash');
 const Mousetrap = require('mousetrap');
 
+function generateNext() {
+    return _.sample(consts.FIGURES);
+}
+
 class Game {
     constructor() {
         this.animationFrameFlag = null;
         this.state = 'stop';
         this.lastTime = 0;
-        this.currentShape = _.sample(consts.FIGURES);
-        this.nextShape = _.sample(consts.FIGURES);
-        drawPreview(this.nextShape);
         store.matrix.init();
-        store.setActiveShape({x: 4, y: -2}, this.currentShape);
+        store.next(generateNext);
         this.update = this._update.bind(this);
         autorun(() => {
             console.log('Game State Changed:', store.game.state);
@@ -59,10 +60,7 @@ class Game {
                 store.matrix.insertShape(store.activeShape);
                 const lines = store.matrix.tryClear();
                 store.game.addScore(lines.length);
-                this.currentShape = this.nextShape;
-                this.nextShape = _.sample(consts.FIGURES);
-                drawPreview(this.nextShape);
-                store.setActiveShape({x: 4, y: 0}, this.currentShape);
+                store.next(generateNext);
             }
             this.lastTime = Date.now();
         }
@@ -71,27 +69,17 @@ class Game {
 }
 
 function redraw() {
-    const activePositions = _.map(store.activeShape.gridPositions(), pos => ({
-        x: pos.x,
-        y: pos.y,
-        color: store.activeShape.color
-    }));
+    const activePositions = store.activeShape.gridPositions();
     drawGrids(canvasUtils.context, [...activePositions, ...store.matrix.filledPositions]);
 }
 
-function drawPreview(shape) {
-    const positions = [];
-    _.forEach(shape.shape, (row, y) => {
-        _.forEach(row, (v, x) => {
-            if (v) {
-                positions.push({x, y, color: shape.color})
-            }
-        })
-    })
-    drawGrids(canvasUtils.preview, positions);
+function drawPreview() {
+    const previewShape = store.nextShape.gridPositions();
+    drawGrids(canvasUtils.preview, previewShape);
 }
 
 const game = new Game();
 
 
 autorun(redraw);
+autorun(drawPreview);

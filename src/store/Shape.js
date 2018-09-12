@@ -48,6 +48,7 @@ const Shape = types.model({
                     res.push({
                         x: x + self.currentPosition.x + direction.x,
                         y: y + self.currentPosition.y + direction.y,
+                        color: self.color,
                     })
                 }
             }

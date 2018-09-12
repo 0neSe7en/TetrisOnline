@@ -7,6 +7,7 @@ import consts  from '../consts'
 
 const Store = types.model({
     activeShape: types.maybe(Shape),
+    nextShape: types.maybe(Shape),
     matrix: Matrix,
     game: Game,
 }).actions((self) => ({
@@ -18,13 +19,19 @@ const Store = types.model({
         self.activeShape.move(direction);
         return true;
     },
+    next(generator) {
+        let nextShape = generator();
+        if (!self.activeShape) {
+            self.setActiveShape({x: 4, y: 0}, nextShape);
+            nextShape = generator();
+            self.setNextShape(nextShape);
+        } else {
+            self.setActiveShape({x: 4, y: 0}, self.nextShape);
+            self.setNextShape(nextShape);
+        }
+    },
     tryRotate() {
         const currentAngle = self.activeShape.angle;
-        const nextPositions = self.activeShape.gridPositions({x: 0, y: 0, angle: currentAngle + 1});
-        if (!self.matrix.isCollision(nextPositions)) {
-            self.activeShape.rotate();
-            return true;
-        }
         let kickTests;
         switch (self.activeShape.name) {
             case 'I':
@@ -53,7 +60,15 @@ const Store = types.model({
             color: figure.color,
             name: figure.name,
         }
-    }
+    },
+    setNextShape(figures) {
+        self.nextShape = {
+            currentPosition: {x: 0, y: 0},
+            shape: figures.shape,
+            color: figures.color,
+            name: figures.name,
+        }
+    },
 }));
 
 
