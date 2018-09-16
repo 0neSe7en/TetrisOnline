@@ -4,6 +4,10 @@ const consts = {
     GRID_WIDTH: 30,
     HEIGHT: 20,
     WIDTH: 10,
+    INTERVAL: {
+        BASE: 500,
+        SOFT: 50,
+    },
     FIGURES: [
         {
             color: '#50F0F0',

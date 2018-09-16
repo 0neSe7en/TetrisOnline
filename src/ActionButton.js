@@ -1,20 +1,41 @@
-import store from './store'
+import gameStore from './store'
 import {autorun} from 'mobx'
 
-const controller = document.getElementById('control');
+const startControl = document.getElementById('startBtn');
+const pauseControl = document.getElementById('pauseBtn');
 
-controller.addEventListener('click', () => {
-    if (store.game.state === 'playing') {
-        store.game.stop();
+startControl.addEventListener('click', () => {
+    if (gameStore.state === 'stop') {
+        gameStore.start();
     } else {
-        store.game.start();
+        gameStore.stop();
     }
 });
 
+pauseControl.addEventListener('click', () => {
+    if (gameStore.state === 'playing') {
+        gameStore.pause();
+    } else if (gameStore.state === 'pause') {
+        gameStore.resume();
+    }
+})
+
 autorun(() => {
-    if (store.game.state === 'playing') {
-        controller.innerText = 'Stop';
-    } else {
-        controller.innerText = 'Start';
+    switch (gameStore.state) {
+        case 'playing':
+            startControl.innerText = 'Stop';
+            pauseControl.disabled = false;
+            pauseControl.innerText = 'Pause';
+            break;
+        case 'stop':
+            startControl.innerText = 'Start';
+            pauseControl.disabled = true;
+            pauseControl.innerText = 'Pause';
+            break;
+        case 'pause':
+            startControl.innerText = 'Stop';
+            pauseControl.disabled = false;
+            pauseControl.innerText = 'Resume';
+            break;
     }
 });

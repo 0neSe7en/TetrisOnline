@@ -1,8 +1,14 @@
 import {autorun} from 'mobx'
-import store from './store'
+import gameStore from './store'
 
-const scoreDom = document.getElementById('score');
+const container = document.getElementById('scoreContainer');
 
 autorun(() => {
-    scoreDom.innerText = store.game.score
+    container.innerHTML = '';
+    gameStore.players.forEach(player => {
+        const score = document.createElement('p');
+        score.id = player.id;
+        score.innerText = `${player.name}:${player.score}`;
+        container.appendChild(score);
+    })
 })

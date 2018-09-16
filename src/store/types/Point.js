@@ -1,5 +1,5 @@
 import { types } from 'mobx-state-tree';
-import consts from '../consts';
+import consts from '../../consts';
 
 const Point = types.model({
     x: types.number,

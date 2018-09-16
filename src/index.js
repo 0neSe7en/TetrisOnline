@@ -49,19 +49,23 @@ class Game {
         }, 'keyup')
     }
 
+    _fixedUpdate() {
+        const success = store.move({x: 0, y: 1});
+        if (!success) {
+            store.matrix.insertShape(store.activeShape);
+            const lines = store.matrix.tryClear();
+            store.game.addScore(lines.length);
+            store.next(generateNext);
+        }
+    }
+
     _update() {
-        if (this.state === 'stop') {
+        if (this.state === 'stop' || this.state === 'pause') {
             this.animationFrameFlag = null;
             return;
         }
         if (!this.lastTime || Date.now() - this.lastTime > store.game.interval) {
-            const success = store.move({x: 0, y: 1});
-            if (!success) {
-                store.matrix.insertShape(store.activeShape);
-                const lines = store.matrix.tryClear();
-                store.game.addScore(lines.length);
-                store.next(generateNext);
-            }
+            this._fixedUpdate();
             this.lastTime = Date.now();
         }
         this.animationFrameFlag = requestAnimationFrame(this.update);
