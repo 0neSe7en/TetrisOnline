@@ -5,17 +5,21 @@
   "author": "0neSe7en <siyuan.se7en@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "parcel start index.html",
-    "build": "parcel build index.html"
-  },
-  "devDependencies": {
-    "parcel-bundler": "^1.9.7"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
   },
   "dependencies": {
     "lodash": "^4.17.10",
     "mobx": "^5.0.3",
+    "mobx-react": "^5.2.8",
+    "mobx-react-devtools": "^6.0.3",
     "mobx-state-tree": "^3.0.2",
     "mousetrap": "^1.6.2",
-    "nanoid": "^1.2.3"
+    "nanoid": "^1.2.3",
+    "react": "^16.5.1",
+    "react-dom": "^16.5.1",
+    "react-scripts": "1.1.5"
   }
 }

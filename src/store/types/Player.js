@@ -1,5 +1,6 @@
 import {types} from 'mobx-state-tree'
-import {Matrix, Shape} from './index'
+import Matrix from './Matrix';
+import Shape from './Shape';
 
 const logic = require('../../logic');
 
@@ -36,6 +37,7 @@ const Player = types.model('Player', {
     },
     reset() {
         self.score = 0;
+        self.activeShape = undefined;
         self.matrix.init();
     },
     addScore(lines) {

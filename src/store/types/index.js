@@ -1,3 +1,9 @@
-export Matrix from './Matrix';
-export Shape from './Shape';
-export Player from './Player';
+import Matrix from './Matrix';
+import Shape from './Shape';
+import Player from './Player';
+
+export {
+  Matrix,
+  Shape,
+  Player
+}

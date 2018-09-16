@@ -1,6 +1,6 @@
-import consts from './consts'
+import consts from '../consts'
 
-class Grid {
+export default class Grid {
     constructor(ctx, position) {
         this.position = position;
         this.ctx = ctx;
@@ -22,5 +22,3 @@ class Grid {
         this.ctx.rect(x * consts.GRID_WIDTH, y * consts.GRID_WIDTH, consts.GRID_WIDTH, consts.GRID_WIDTH);
     }
 }
-
-module.exports = Grid;
