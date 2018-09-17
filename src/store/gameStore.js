@@ -1,4 +1,4 @@
-import { types } from 'mobx-state-tree';
+import { types, onPatch, applyPatch } from 'mobx-state-tree';
 import Player from './types/Player';
 import consts from '../consts'
 
@@ -67,7 +67,20 @@ const gameStore = Game.create({
   players: {}
 })
 
+onPatch(gameStore, patch => {
+  applyPatch(window.gameStore2, patch);
+})
+
 window.gameStore = gameStore;
+const gameStore2 = Game.create({
+  mode: 'single',
+  state: 'stop',
+  players: {}
+})
+
+window.gameStore2 = gameStore2;
+
+export { gameStore2 };
 
 
 export default gameStore;

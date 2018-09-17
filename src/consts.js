@@ -10,7 +10,7 @@ const consts = {
     },
     FIGURES: [
         {
-            color: '#50F0F0',
+            color: '#70baba',
             name: 'I',
             shape: [
                 [0,0,0,0],
@@ -20,7 +20,7 @@ const consts = {
             ],
         },
         {
-            color: '#1D00F0',
+            color: '#3b39c9',
             name: "J",
             shape: [
                 [1,0,0],
@@ -29,7 +29,7 @@ const consts = {
             ]
         },
         {
-            color: '#F0A002',
+            color: '#e9a333',
             name: "L",
             shape: [
                 [0,0,1],
@@ -38,7 +38,7 @@ const consts = {
             ]
         },
         {
-            color: '#F0F001',
+            color: '#ded73f',
             name: "O",
             shape: [
                 [1,1],
@@ -46,7 +46,7 @@ const consts = {
             ]
         },
         {
-            color: '#4AF000',
+            color: '#7ddf4c',
             name: "S",
             shape: [
                 [0,1,1],
@@ -55,7 +55,7 @@ const consts = {
             ],
         },
         {
-            color: '#A000F0',
+            color: '#9e2fca',
             name: "T",
             shape: [
                 [0,1,0],
@@ -64,7 +64,7 @@ const consts = {
             ]
         },
         {
-            color: '#F00000',
+            color: '#d6393f',
             name: "Z",
             shape: [
                 [1,1,0],

@@ -22,11 +22,11 @@ class ActionButton extends Component {
   }
 
   render() {
-    console.log('game store disable?', gameStore.pauseDisable);
     return (
       <div>
-        <button onClick={this.onClickStart}>{gameStore.startStop}</button>
+        <button className="pure-button" onClick={this.onClickStart}>{gameStore.startStop}</button>
         <button
+          className={`pure-button ${gameStore.pauseDisable && 'pure-button-disabled'}`}
           disabled={gameStore.pauseDisable}
           onClick={this.onClickPause}
         >

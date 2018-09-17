@@ -1,27 +1,20 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react';
+import {autorun} from 'mobx'
 import { observer } from 'mobx-react';
-import { gameStore, localStore } from '../store';
+
+import { gameStore2 } from '../store/gameStore';
 import consts from '../consts'
 import * as canvas from '../utils/canvas'
 import Score from './Score'
-import Preview from './Preview'
-import {autorun} from 'mobx'
-import {drawGrids} from '../utils/canvas'
-import * as controller from '../tetris/controller'
-import Game from '../tetris/Game'
-import './SelfTetris.css'
 
-class SelfTetris extends Component {
+class RemoteTetris extends Component {
   constructor(props) {
     super(props);
     this.gameCanvas = React.createRef();
     this.gameCtx = null;
     this.gameWidth = consts.GRID_WIDTH * consts.WIDTH;
     this.gameHeight = consts.GRID_WIDTH * consts.HEIGHT;
-    this.previewWidth = consts.GRID_WIDTH * 4;
     this.cancelAutorun = [];
-    this.bound = false;
-    this.game = null;
   }
 
   clearGameCanvas() {
@@ -32,19 +25,16 @@ class SelfTetris extends Component {
     this.gameCtx = this.gameCanvas.current.getContext('2d');
     canvas.scaleRatio(this.gameCanvas.current, this.gameCtx, this.gameWidth, this.gameHeight);
     this.clearGameCanvas();
-    controller.bind(gameStore.players.get(localStore.selfId));
-    this.game = new Game(gameStore.players.get(localStore.selfId));
     this.cancelAutorun = [
       autorun(() => {
-        const self = gameStore.players.get(localStore.selfId);
+        const self = gameStore2.players.get(this.props.playerId);
         const filled = self.matrix.filledPositions;
         if (!self.activeShape) {
           this.clearGameCanvas();
         } else {
           const active = self.activeShape.gridPositions();
           this.clearGameCanvas();
-          // TODO: 只重绘修改部分
-          drawGrids(this.gameCtx, [...active, ...filled]);
+          canvas.drawGrids(this.gameCtx, [...active, ...filled]);
         }
       }),
     ];
@@ -52,11 +42,10 @@ class SelfTetris extends Component {
 
   componentWillUnmount() {
     this.cancelAutorun.forEach(dispos => dispos());
-    controller.unbind();
   }
 
   render() {
-    const self = gameStore.players.get(localStore.selfId);
+    const player = gameStore2.players.get(this.props.playerId);
     return (
       <React.Fragment>
         <div className="game">
@@ -65,16 +54,11 @@ class SelfTetris extends Component {
             width={this.gameWidth}
             height={this.gameHeight}
           />
-          <Preview
-            style={{paddingLeft: 12}}
-            width={this.previewWidth}
-            height={this.previewWidth}
-          />
-          { <Score score={self.score}/> }
+          { <Score score={player.score}/> }
         </div>
       </React.Fragment>
     )
   }
 }
 
-export default observer(SelfTetris)
+export default observer(RemoteTetris)

@@ -7,7 +7,11 @@ const Local = types.model('Local', {
   holdShape: types.maybe(Shape),
   currentInterval: consts.INTERVAL.BASE,
   selfId: '',
+  currentNickName: '',
 }).actions(self => ({
+  inputNickName(v) {
+    self.currentNickName = v;
+  },
   setNextShape(figure) {
     self.nextShape = {
       currentPosition: {x: 0, y: 0},

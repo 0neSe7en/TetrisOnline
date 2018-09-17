@@ -1,5 +1,11 @@
-body {
+* {
   margin: 0;
-  padding: 0;
+}
+
+body {
   font-family: sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizelegibility;
+  height: 100vh;
+  letter-spacing: 0.01em;
 }

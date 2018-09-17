@@ -12,7 +12,7 @@ export default class Grid {
     }
     stroke(color=consts.GRID_BORDER_COLOR) {
         this._rect();
-        this.ctx.lineWidth = 0.2 ;
+        this.ctx.lineWidth = 1;
         this.ctx.strokeStyle = color;
         this.ctx.stroke();
     }
