@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {autorun} from 'mobx'
-import { observer } from 'mobx-react';
+import {observer} from 'mobx-react';
 
-import { gameStore2 } from '../store/gameStore';
+import {gameStore} from '../store';
 import consts from '../consts'
 import * as canvas from '../utils/canvas'
 import Score from './Score'
@@ -27,7 +27,7 @@ class RemoteTetris extends Component {
     this.clearGameCanvas();
     this.cancelAutorun = [
       autorun(() => {
-        const self = gameStore2.players.get(this.props.playerId);
+        const self = gameStore.players.get(this.props.playerId);
         const filled = self.matrix.filledPositions;
         if (!self.activeShape) {
           this.clearGameCanvas();
@@ -45,7 +45,8 @@ class RemoteTetris extends Component {
   }
 
   render() {
-    const player = gameStore2.players.get(this.props.playerId);
+    const player = gameStore.players.get(this.props.playerId);
+    console.log('render remote:', player, this.props.playerId);
     return (
       <React.Fragment>
         <div className="game">
@@ -54,7 +55,7 @@ class RemoteTetris extends Component {
             width={this.gameWidth}
             height={this.gameHeight}
           />
-          { <Score score={player.score}/> }
+          {player && <Score score={player.score}/>}
         </div>
       </React.Fragment>
     )

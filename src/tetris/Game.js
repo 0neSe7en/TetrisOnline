@@ -21,7 +21,10 @@ export default class Game {
         this.setNext();
       } else if (gameStore.state === 'playing') {
         this.running = true;
-        this.update();
+        setImmediate(() => {
+          // 需要跳出autorun，才能触发onPatch
+          this.update();
+        })
       } else {
         this.running = false;
       }

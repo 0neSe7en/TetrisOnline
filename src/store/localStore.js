@@ -8,9 +8,13 @@ const Local = types.model('Local', {
   currentInterval: consts.INTERVAL.BASE,
   selfId: '',
   currentNickName: '',
+  targetPeer: ''
 }).actions(self => ({
   inputNickName(v) {
     self.currentNickName = v;
+  },
+  inputTargetPeer(v) {
+    self.targetPeer = v;
   },
   setNextShape(figure) {
     self.nextShape = {

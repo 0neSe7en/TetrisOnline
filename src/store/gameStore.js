@@ -1,4 +1,4 @@
-import { types, onPatch, applyPatch } from 'mobx-state-tree';
+import { types } from 'mobx-state-tree';
 import Player from './types/Player';
 import consts from '../consts'
 
@@ -26,6 +26,10 @@ const Game = types.model('Game', {
   get pauseDisable() {
     return self.state === 'stop';
   }
+})).views(self => ({
+  remotePlayerId(localId) {
+    return [...self.players.keys()].filter(id => id !== localId);
+  }
 })).actions(self => ({
   start() {
     self.state = 'playing';
@@ -45,10 +49,10 @@ const Game = types.model('Game', {
   win(player) {
     this.win = player;
   },
-  join(name) {
+  join(name, id) {
     const player = Player.create({
       name,
-      id: nanoid(10),
+      id: id || nanoid(10),
       matrix: { data: [] }
     });
     player.matrix.init();
@@ -67,20 +71,6 @@ const gameStore = Game.create({
   players: {}
 })
 
-onPatch(gameStore, patch => {
-  applyPatch(window.gameStore2, patch);
-})
-
 window.gameStore = gameStore;
-const gameStore2 = Game.create({
-  mode: 'single',
-  state: 'stop',
-  players: {}
-})
-
-window.gameStore2 = gameStore2;
-
-export { gameStore2 };
-
 
 export default gameStore;

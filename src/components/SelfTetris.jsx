@@ -71,6 +71,7 @@ class SelfTetris extends Component {
             height={this.previewWidth}
           />
           { <Score score={self.score}/> }
+          <p>Peer: {localStore.selfId}</p>
         </div>
       </React.Fragment>
     )
