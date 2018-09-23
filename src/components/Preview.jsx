@@ -37,7 +37,6 @@ class Preview extends Component {
   }
 
   render() {
-    console.log('render...preview');
     return <canvas ref={this.previewCanvas} width={this.props.width} height={this.props.height} style={this.props.style}/>
   }
 

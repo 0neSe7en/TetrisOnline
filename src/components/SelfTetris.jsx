@@ -10,6 +10,7 @@ import {drawGrids} from '../utils/canvas'
 import * as controller from '../tetris/controller'
 import Game from '../tetris/Game'
 import './SelfTetris.css'
+import {drawBorderGrid} from '../utils/canvas'
 
 class SelfTetris extends Component {
   constructor(props) {
@@ -32,7 +33,6 @@ class SelfTetris extends Component {
     this.gameCtx = this.gameCanvas.current.getContext('2d');
     canvas.scaleRatio(this.gameCanvas.current, this.gameCtx, this.gameWidth, this.gameHeight);
     this.clearGameCanvas();
-    controller.bind(gameStore.players.get(localStore.selfId));
     this.game = new Game(gameStore.players.get(localStore.selfId));
     this.cancelAutorun = [
       autorun(() => {
@@ -45,6 +45,7 @@ class SelfTetris extends Component {
           this.clearGameCanvas();
           // TODO: 只重绘修改部分
           drawGrids(this.gameCtx, [...active, ...filled]);
+          drawBorderGrid(this.gameCtx, self.hardDropPosition.positions)
         }
       }),
     ];
@@ -52,7 +53,6 @@ class SelfTetris extends Component {
 
   componentWillUnmount() {
     this.cancelAutorun.forEach(dispos => dispos());
-    controller.unbind();
   }
 
   render() {
@@ -66,12 +66,11 @@ class SelfTetris extends Component {
             height={this.gameHeight}
           />
           <Preview
-            style={{paddingLeft: 12}}
+            style={{paddingLeft: 15}}
             width={this.previewWidth}
             height={this.previewWidth}
           />
           { <Score score={self.score}/> }
-          <p>Peer: {localStore.selfId}</p>
         </div>
       </React.Fragment>
     )

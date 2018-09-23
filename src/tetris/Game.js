@@ -1,6 +1,7 @@
 import consts from '../consts'
 import {gameStore, localStore} from '../store'
 import {autorun} from 'mobx'
+import * as controller from './controller'
 
 const _ = require('lodash');
 
@@ -18,14 +19,17 @@ export default class Game {
     autorun(() => {
       if (gameStore.state === 'stop') {
         this.running = false;
+        controller.unbind();
         this.setNext();
       } else if (gameStore.state === 'playing') {
+        controller.bind(this.player, this);
         this.running = true;
         setImmediate(() => {
           // 需要跳出autorun，才能触发onPatch
           this.update();
         })
       } else {
+        controller.unbind();
         this.running = false;
       }
     })
@@ -42,6 +46,18 @@ export default class Game {
     this.setNext();
   }
 
+  hardDrop() {
+    this.player.hardDrop();
+    this.moveDone();
+  }
+
+  moveDone() {
+    this.player.matrix.insertShape(this.player.activeShape);
+    const lines = this.player.matrix.tryClear();
+    this.player.addScore(lines.length);
+    this.setActive();
+  }
+
   _update() {
     if (!this.running) {
       this.animationFrameFlag = null;
@@ -53,10 +69,7 @@ export default class Game {
     if (!this.lastTime || Date.now() - this.lastTime > localStore.currentInterval) {
       const success = this.player.move({x: 0, y: 1});
       if (!success) {
-        this.player.matrix.insertShape(this.player.activeShape);
-        const lines = this.player.matrix.tryClear();
-        this.player.addScore(lines.length);
-        this.setActive();
+        this.moveDone();
       }
       this.lastTime = Date.now();
     }

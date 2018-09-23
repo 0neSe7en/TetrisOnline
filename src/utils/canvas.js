@@ -29,3 +29,10 @@ export function drawGrids(context, grids) {
     grid.stroke('white');
   })
 }
+
+export function drawBorderGrid(context, grids) {
+  grids.forEach(pos => {
+    const grid = new Grid(context, pos);
+    grid.stroke(pos.color);
+  })
+}

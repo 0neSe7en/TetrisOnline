@@ -46,7 +46,6 @@ class RemoteTetris extends Component {
 
   render() {
     const player = gameStore.players.get(this.props.playerId);
-    console.log('render remote:', player, this.props.playerId);
     return (
       <React.Fragment>
         <div className="game">

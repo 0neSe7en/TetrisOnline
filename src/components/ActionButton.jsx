@@ -5,6 +5,7 @@ import localStore from '../store/localStore'
 
 class ActionButton extends Component {
   onClickStart() {
+    document.activeElement.blur();
     if (gameStore.state === 'stop') {
       gameStore.start();
     } else {
@@ -14,6 +15,7 @@ class ActionButton extends Component {
   }
 
   onClickPause() {
+    document.activeElement.blur();
     if (gameStore.state === 'playing') {
       gameStore.pause();
     } else if (gameStore.state === 'pause') {

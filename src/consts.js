@@ -1,7 +1,7 @@
 const consts = {
     BACKGROUND_COLOR: '#eeeeee',
     GRID_BORDER_COLOR: '#444444',
-    GRID_WIDTH: 30,
+    GRID_WIDTH: 20,
     HEIGHT: 20,
     WIDTH: 10,
     INTERVAL: {
@@ -10,7 +10,7 @@ const consts = {
     },
     FIGURES: [
         {
-            color: '#70baba',
+            color: '#6EE1FB',
             name: 'I',
             shape: [
                 [0,0,0,0],
@@ -20,7 +20,7 @@ const consts = {
             ],
         },
         {
-            color: '#3b39c9',
+            color: '#3CA2FC',
             name: "J",
             shape: [
                 [1,0,0],
@@ -29,7 +29,7 @@ const consts = {
             ]
         },
         {
-            color: '#e9a333',
+            color: '#F0650B',
             name: "L",
             shape: [
                 [0,0,1],
@@ -38,7 +38,7 @@ const consts = {
             ]
         },
         {
-            color: '#ded73f',
+            color: '#F8B50E',
             name: "O",
             shape: [
                 [1,1],
@@ -46,7 +46,7 @@ const consts = {
             ]
         },
         {
-            color: '#7ddf4c',
+            color: '#33A712',
             name: "S",
             shape: [
                 [0,1,1],
@@ -55,7 +55,7 @@ const consts = {
             ],
         },
         {
-            color: '#9e2fca',
+            color: '#8354BA',
             name: "T",
             shape: [
                 [0,1,0],
@@ -64,7 +64,7 @@ const consts = {
             ]
         },
         {
-            color: '#d6393f',
+            color: '#F41F1D',
             name: "Z",
             shape: [
                 [1,1,0],
