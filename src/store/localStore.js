@@ -5,6 +5,7 @@ import consts from '../consts'
 const Local = types.model('Local', {
   nextShape: types.maybe(Shape),
   holdShape: types.maybe(Shape),
+  canHold: true,
   currentInterval: consts.INTERVAL.BASE,
   selfId: '',
   currentNickName: '',
@@ -17,6 +18,7 @@ const Local = types.model('Local', {
     self.targetPeer = v;
   },
   setNextShape(figure) {
+    self.canHold = true;
     self.nextShape = {
       currentPosition: {x: 0, y: 0},
       shape: figure.shape,
@@ -25,8 +27,14 @@ const Local = types.model('Local', {
     }
   },
   hold(shape) {
-    const current = self.holdShape;
+    let current = self.holdShape;
+    if (current) {
+      current.moveTo(consts.INITIAL_POSITIONS);
+      current = current.toJSON();
+    }
     self.holdShape = shape;
+    self.holdShape.moveTo({x: 0, y: 0});
+    self.canHold = false;
     return current;
   },
   soft() {

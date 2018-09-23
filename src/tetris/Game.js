@@ -41,7 +41,7 @@ export default class Game {
   }
 
   setActive() {
-    localStore.nextShape.move({y: -2, x: 3});
+    localStore.nextShape.move(consts.INITIAL_POSITIONS);
     this.player.setActiveShape(localStore.nextShape.toJSON());
     this.setNext();
   }
@@ -49,6 +49,17 @@ export default class Game {
   hardDrop() {
     this.player.hardDrop();
     this.moveDone();
+  }
+
+  hold() {
+    if (localStore.canHold) {
+      const held = localStore.hold(this.player.activeShape.toJSON());
+      if (held) {
+        this.player.setActiveShape(held);
+      } else {
+        this.setActive();
+      }
+    }
   }
 
   moveDone() {

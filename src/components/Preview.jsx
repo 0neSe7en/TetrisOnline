@@ -23,7 +23,7 @@ class Preview extends Component {
     this.clearPreviewCanvas();
     this.cancelAutorun = [
       autorun(() => {
-        const preview = localStore.nextShape;
+        const preview = localStore[this.props.observerKey];
         if (preview) {
           this.clearPreviewCanvas();
           drawGrids(this.previewCtx, preview.gridPositions());

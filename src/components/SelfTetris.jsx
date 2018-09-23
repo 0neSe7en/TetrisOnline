@@ -4,10 +4,9 @@ import { gameStore, localStore } from '../store';
 import consts from '../consts'
 import * as canvas from '../utils/canvas'
 import Score from './Score'
-import Preview from './Preview'
+import SingleShape from './Preview'
 import {autorun} from 'mobx'
 import {drawGrids} from '../utils/canvas'
-import * as controller from '../tetris/controller'
 import Game from '../tetris/Game'
 import './SelfTetris.css'
 import {drawBorderGrid} from '../utils/canvas'
@@ -60,15 +59,22 @@ class SelfTetris extends Component {
     return (
       <React.Fragment>
         <div className="game">
+          <SingleShape
+            style={{paddingRight: 15}}
+            width={this.previewWidth}
+            height={this.previewWidth}
+            observerKey="holdShape"
+          />
           <canvas
             ref={this.gameCanvas}
             width={this.gameWidth}
             height={this.gameHeight}
           />
-          <Preview
+          <SingleShape
             style={{paddingLeft: 15}}
             width={this.previewWidth}
             height={this.previewWidth}
+            observerKey="nextShape"
           />
           { <Score score={self.score}/> }
         </div>

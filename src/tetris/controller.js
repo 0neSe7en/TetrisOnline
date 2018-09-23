@@ -26,6 +26,10 @@ export function bind(player, game) {
   Mousetrap.bind('space', () => {
     game.hardDrop();
   })
+
+  Mousetrap.bind(['shift', 'c'], () => {
+    game.hold();
+  })
 }
 
 export function unbind() {
