@@ -3,8 +3,7 @@ import "./Score.css"
 
 const Score = ({score}) => (
   <div className="score">
-    <h2>Score</h2>
-    <p>{score}</p>
+    <h1>{score}</h1>
   </div>
 )
 

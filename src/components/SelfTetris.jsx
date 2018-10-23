@@ -20,7 +20,6 @@ class SelfTetris extends Component {
     this.gameHeight = consts.GRID_WIDTH * consts.HEIGHT;
     this.previewWidth = consts.GRID_WIDTH * 4;
     this.cancelAutorun = [];
-    this.bound = false;
     this.game = null;
   }
 
@@ -57,7 +56,8 @@ class SelfTetris extends Component {
   render() {
     const self = gameStore.players.get(localStore.selfId);
     return (
-      <React.Fragment>
+      <div className="gameWrapper">
+        { <Score score={self.score}/> }
         <div className="game">
           <SingleShape
             style={{paddingRight: 15}}
@@ -76,9 +76,8 @@ class SelfTetris extends Component {
             height={this.previewWidth}
             observerKey="nextShape"
           />
-          { <Score score={self.score}/> }
         </div>
-      </React.Fragment>
+      </div>
     )
   }
 }

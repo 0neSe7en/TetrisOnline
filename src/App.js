@@ -19,7 +19,6 @@ class App extends Component {
           <h1>Tetris</h1>
           <Route exact path="/" component={Home}/>
           <Route path="/single" component={SingleTetris}/>
-          <Route path="/multi" component={Home}/>
           <DevTools/>
         </div>
       </Router>
