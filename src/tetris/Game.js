@@ -1,8 +1,10 @@
+import {autorun} from 'mobx'
 import consts from '../consts'
 import {gameStore, localStore} from '../store'
-import {autorun} from 'mobx'
+import sound from './sound';
 import * as controller from './controller'
 
+console.log('sound:', sound);
 const _ = require('lodash');
 
 
@@ -16,6 +18,10 @@ export default class Game {
     this.player = player;
     this.update = this._update.bind(this);
     this.running = false;
+    console.log('init game', sound.sounds);
+    const id = sound.sounds.play('background');
+    console.log('background id', id);
+    sound.sounds.volume(0.5, id);
     autorun(() => {
       if (gameStore.state === 'stop') {
         this.running = false;
@@ -48,11 +54,13 @@ export default class Game {
 
   hardDrop() {
     this.player.hardDrop();
+    sound.sounds.play('hardDrop');
     this.moveDone();
   }
 
   hold() {
     if (localStore.canHold) {
+      sound.sounds.play('hold');
       const held = localStore.hold(this.player.activeShape.toJSON());
       if (held) {
         this.player.setActiveShape(held);
@@ -65,8 +73,16 @@ export default class Game {
   moveDone() {
     this.player.matrix.insertShape(this.player.activeShape);
     const lines = this.player.matrix.tryClear();
+    if (lines.length) {
+      if (lines.length === 4) {
+        sound.sounds.play('tetrisClear');
+      } else {
+        sound.sounds.play('clear');
+      }
+    }
     this.player.addScore(lines.length);
     this.setActive();
+    return lines;
   }
 
   _update() {
@@ -80,7 +96,8 @@ export default class Game {
     if (!this.lastTime || Date.now() - this.lastTime > localStore.currentInterval) {
       const success = this.player.move({x: 0, y: 1});
       if (!success) {
-        this.moveDone();
+        const lines = this.moveDone();
+        sound.sounds.play('drop');
       }
       this.lastTime = Date.now();
     }

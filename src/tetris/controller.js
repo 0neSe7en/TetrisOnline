@@ -1,17 +1,22 @@
 import localStore from '../store/localStore';
+import sound from './sound';
+console.log('sound:', sound);
 
 const Mousetrap = require('mousetrap');
 
 export function bind(player, game) {
   Mousetrap.bind('left', () => {
+    sound.sounds.play('move');
     player.move({x: -1, y: 0});
   })
 
   Mousetrap.bind('right', () => {
+    sound.sounds.play('move');
     player.move({x: 1, y: 0});
   })
 
   Mousetrap.bind('up', () => {
+    sound.sounds.play('rotate');
     player.rotate();
   });
 
